@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { toRoman } from "@/components/journey/roman";
+import { stageA11yLabel } from "@/components/journey/stageA11y";
 import { PlateImage } from "@/components/media/PlateImage";
 import { PortableText } from "@/components/portable/PortableText";
 import { PlaceTile } from "@/components/sections/PlaceTile";
@@ -9,6 +11,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getFaceEntity, getFaceSlugs } from "@/lib/data/face";
 import { isFaceWing, WING_LABELS } from "@/lib/face";
 import { isLocale, locales, resolveLocale, type Locale } from "@/lib/i18n";
+import { getJourneyStage, resolveStage } from "@/lib/journey";
 import { faceEntityJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/metadata";
 
@@ -56,6 +59,8 @@ export default async function FaceEntityPage({
   const summary = resolveLocale(entity.summary, typed);
   const body = entity.body?.[typed] ?? entity.body?.en;
   const km = entity.km ?? 0;
+  const stageN = resolveStage(entity.journeyStage, km);
+  const stage = getJourneyStage(stageN);
 
   return (
     <main>
@@ -88,6 +93,14 @@ export default async function FaceEntityPage({
             {`FACE Ganga · ${WING_LABELS[wing][typed]}`}
             {entity.register === "obituary" ? ` · ${typed === "hi" ? "श्रद्धांजलि" : "obituary"}` : ""}
           </p>
+          {/* stage eyebrow — this expression belongs to a stage of her life.
+              Monochrome, secondary chrome; the wing stays primary. Shared journey vocab. */}
+          {stage && (
+            <p className="label-row mt-3" style={{ textTransform: "none" }}>
+              <span aria-hidden="true">{toRoman(stageN)} · {stage.copy[typed].title}</span>
+              <span className="sr-only">{stageA11yLabel(stageN, typed)}</span>
+            </p>
+          )}
           <h1 className="mt-5 text-ink">
             {entity.title?.hi && (
               <span lang="hi" className="font-deva block text-3xl leading-none md:text-4xl">
