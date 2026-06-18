@@ -1,0 +1,439 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Gangatirtham — "Tirtha" design system. Tailwind v4, CSS-first.
+   Values are LOCKED (DESIGN_SYSTEM.md). This is the canonical source of truth in
+   code. Do not change typography, spacing, or palette. Ported from prototype.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Colour tokens — warm-biased, museum-grade. Bone≠#FFF · Ink≠#000. ── */
+  --color-bone: #f4f1ea; /* page ground */
+  --color-alabaster: #fbf9f4; /* raised surfaces / plinth cards */
+  --color-reading: #f6f2e9; /* long-form essay ground */
+  --color-ink: #14110d; /* text (16.7:1 on Bone) */
+  --color-slate: #4a4540; /* captions/metadata (8.4:1) */
+  --color-slate-light: #6b645b; /* tertiary (5.17:1) */
+  --color-slate-reading: #635c53; /* tertiary on Reading ground */
+  --color-stone: #d8d2c6; /* 1px hairlines */
+  --color-stone-deep: #c2baa9; /* dividers */
+  --color-vermilion: #9b3b2e; /* error/destructive */
+
+  /* Temperature ramp — the one chromatic event per screen (non-text hues) */
+  --color-glacial: #3e6e82; /* 0% source */
+  --color-meltwater: #6e94a0; /* 18% */
+  --color-silt: #9a8e78; /* 40% confluence pivot */
+  --color-sandbar: #b5823e; /* 68% */
+  --color-delta: #b5772e; /* 100% ocean */
+
+  /* Reserved metals — scarcity is the point */
+  --color-foil: #a97c2f; /* book only · rendered as 1px keyline, never a fill */
+  --color-lamp: #e8b85c; /* Sankalp only · inscriptional, never a glow */
+
+  /* Dark field */
+  --color-basalt: #1a1714; /* dark field (never #000) */
+  --color-stone-night: #241f1a; /* dark raised */
+  --color-moonstone: #ede8de; /* dark text (14.6:1) */
+  --color-on-dark-muted: #a39c90;
+  --color-on-dark-faint: #94896f;
+
+  /* Focus — surface-aware, tokenized. Never bind a ring to cyan alone. */
+  --color-focus-light: #14110d;
+  --color-focus-dark: #7fc4e0;
+
+  /* ── Type — Devanagari is first-class (the Tiro soul face). ── */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-deva: var(--font-tiro), "Noto Serif Devanagari", serif;
+
+  /* ── Spacing — 8px-snapped low, golden-section (×1.618) high. ── */
+  --spacing-0: 0;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 26px;
+  --spacing-6: 42px;
+  --spacing-7: 68px;
+  --spacing-8: 110px;
+  --spacing-9: 160px;
+
+  /* ── Radius — lapidary. No pills, ever. ── */
+  --radius-none: 0;
+  --radius-sm: 2px; /* working max */
+  --radius-md: 4px; /* rare — acquisition slip, plate frames */
+
+  /* ── Breakpoints ── */
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 905px;
+  --breakpoint-lg: 1240px;
+  --breakpoint-xl: 1440px;
+}
+
+/* ── Foundation — set in plain CSS so the look holds regardless of utilities. ── */
+:root {
+  --river-t: 0;
+  --accent: #3e6e82;
+  --accent-readable: #2a4d62;
+}
+@supports (color: color-mix(in oklch, red, blue)) {
+  :root {
+    --accent: color-mix(in oklch, #3e6e82, #b5772e calc(var(--river-t) * 100%));
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Felt texture: grain at ~4% (felt, not seen). ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Type scale — golden-section, fluid. Do not alter. ── */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+.font-deva {
+  font-family: var(--font-deva);
+  letter-spacing: 0; /* never letterspace Devanagari */
+  line-height: 1.45;
+}
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
+}
+
+.t-overture {
+  font-size: clamp(3.1rem, 0.6rem + 11.2vw, 7rem);
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  font-weight: 430;
+  font-variation-settings: "opsz" 144, "wght" 430;
+}
+.t-h1 {
+  font-size: clamp(2.3rem, 1.1rem + 5.6vw, 4.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 110, "wght" 440;
+}
+.t-h2 {
+  font-size: clamp(1.85rem, 1.2rem + 2.6vw, 2.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 80, "wght" 450;
+}
+.t-h3 {
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.t-lede {
+  font-size: clamp(1.16rem, 1.05rem + 0.4vw, 1.31rem);
+  line-height: 1.55;
+  font-weight: 350;
+}
+.t-body {
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  font-weight: 350;
+}
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.t-micro {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ── The Waterline — the brand fingerprint (signature motif). ── */
+.waterline {
+  position: fixed;
+  left: 1.5rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  z-index: 40;
+  display: none;
+  background: linear-gradient(
+    180deg,
+    #3e6e82 0%,
+    #6e94a0 24%,
+    #9a8e78 50%,
+    #b5823e 74%,
+    #b5772e 100%
+  );
+  opacity: 0.55;
+}
+@media (min-width: 1024px) {
+  .waterline {
+    display: block;
+  }
+}
+.waterline .marker {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--color-bone);
+  transition: top 0.12s linear;
+}
+.waterline .readout {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 1.4rem;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  color: var(--color-slate-light);
+}
+/* mobile progress hairline */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  z-index: 40;
+  width: calc(var(--river-t) * 100%);
+  background: var(--accent);
+}
+@media (min-width: 1024px) {
+  .progress {
+    display: none;
+  }
+}
+
+/* ── The River Draws Itself — hero stroke inscribes on load (signature moment). ── */
+.draw-river {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-river 1600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes draw-river {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── The Wound — stage VII marker interruption (the one grief beat). The severed
+   line is the signal: static, rendered immediately, and the sole carrier under
+   reduced motion. The one-shot approach→pause→continue merely notices it — no
+   recoil, no scale, no opacity, no glow. The effect should be easy to miss. ── */
+.wound-break {
+  position: absolute;
+  top: -3px;
+  width: 16px;
+  height: 7px;
+  transform: translateX(-50%);
+  background: var(--color-bone); /* the river line stops here */
+}
+.wound-break::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 1px;
+  height: 14px;
+  transform: translateX(-50%);
+  background: var(--color-slate); /* the cut — a thin barrage gate */
+}
+.wound-marker {
+  animation: wound-approach 700ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes wound-approach {
+  0% {
+    transform: translateX(calc(-50% - 12px)); /* approach from upstream */
+  }
+  50%,
+  68% {
+    transform: translateX(calc(-50% - 2px)); /* pause — resistance at the break */
+  }
+  100% {
+    transform: translateX(-50%); /* continue to rest, then never move again */
+  }
+}
+
+/* ── Graded plates — look like photographs without assets. ── */
+.plate {
+  position: relative;
+  overflow: hidden;
+  background: #6f7d82;
+}
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 90% at 72% 18%, rgba(244, 241, 234, 0.3), transparent 52%),
+    linear-gradient(168deg, rgba(20, 17, 13, 0) 38%, rgba(20, 17, 13, 0.46) 100%);
+}
+.plate > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6) contrast(1.03) brightness(0.99) sepia(0.05);
+}
+.plate-glacial {
+  background: linear-gradient(168deg, #6f8c97 0%, #46606d 46%, #26323a 100%);
+}
+.plate-meltwater {
+  background: linear-gradient(168deg, #86a3ab 0%, #536d76 50%, #2c3a41 100%);
+}
+.plate-silt {
+  background: linear-gradient(168deg, #9c968b 0%, #6c6a5d 50%, #3a3730 100%);
+}
+.plate-warm {
+  background: linear-gradient(168deg, #b8916b 0%, #7c5d3e 48%, #37291c 100%);
+}
+.plate-archive {
+  background: linear-gradient(168deg, #8d887f, #4a463f 60%, #262320);
+  filter: saturate(0.18);
+}
+
+/* ── Reserved metals — foil = 1px keyline only; always a solid fallback. ── */
+.foil-text {
+  color: var(--color-foil); /* solid fallback (canary) */
+}
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .foil-text {
+    background: linear-gradient(96deg, #8a641f, #c9a24e 50%, #8a641f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
+.foil-rule {
+  height: 1px;
+  background: linear-gradient(90deg, #8a641f, #c9a24e, #8a641f);
+}
+.foil-rule-v {
+  width: 1px;
+  background: linear-gradient(180deg, #8a641f, #c9a24e, #8a641f);
+}
+
+/* ── Object-label apparatus. ── */
+.label-row {
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.1em;
+  color: var(--color-slate);
+  text-transform: uppercase;
+}
+
+/* ── Keyline link — draws on hover (door easing). ── */
+.klink {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+.klink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.7;
+}
+.klink:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Plinth tile — structure is hairline + one ambient plinth shadow. ── */
+.tile {
+  transition:
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.26s;
+}
+.tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 44px rgba(20, 17, 13, 0.1);
+}
+
+/* ── The field of lamps — inscriptional, never a glow. ── */
+.lamp {
+  display: inline-block;
+  width: 2px;
+  background: var(--color-lamp);
+  vertical-align: bottom;
+}
+
+/* ── The book object. ── */
+.book {
+  position: relative;
+  background: linear-gradient(150deg, #2b2823, #1b1813 70%);
+  box-shadow:
+    -20px 26px 60px rgba(20, 17, 13, 0.3),
+    inset 0 1px 0 rgba(201, 162, 78, 0.22),
+    inset -1px 0 0 rgba(201, 162, 78, 0.1);
+}
+
+/* ── Focus — surface-aware. :focus-visible on every interactive element. ── */
+:focus-visible {
+  outline: 2px solid var(--color-focus-light);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #dcd2bd;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .waterline .marker {
+    transition: none;
+  }
+  .draw-river {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  /* the wound's severed line stays; only the noticing motion is removed */
+  .wound-marker {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
