@@ -43,6 +43,8 @@ export const keepALamp: SankalpData = {
     },
   ],
   lampsKept: 3412,
-  targetPlace: { title: { en: "Kashi", hi: "काशी" }, slug: "varanasi" },
+  // No explicit campaign journeyStage — the lamp inherits its stage from the
+  // target place (Kashi · km 1384 · Stage V Reckoning), per the schema's intent.
+  targetPlace: { title: { en: "Kashi", hi: "काशी" }, slug: "varanasi", km: 1384, journeyStage: 5 },
   seo: { noindex: false },
 };
