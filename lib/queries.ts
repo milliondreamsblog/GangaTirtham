@@ -154,7 +154,8 @@ export const FACE_LIST_QUERY = groq`
     "summary": summary,
     register,
     "heroImage": images[0]{ ${IMAGE} },
-    "km": relatedPlaces[0]->riverPosition.km
+    "km": relatedPlaces[0]->riverPosition.km,
+    journeyStage
   } | order(wing asc)
 `;
 
@@ -171,6 +172,7 @@ export const FACE_ENTITY_QUERY = groq`
     "wing": ${FACE_WING},
     "summary": summary,
     register,
+    journeyStage,
     "body": coalesce(body, description, process),
     "heroImage": images[0]{ ${IMAGE} },
     "km": relatedPlaces[0]->riverPosition.km,
