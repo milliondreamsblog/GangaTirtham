@@ -128,11 +128,11 @@ export const FEATURED_BOOK_QUERY = groq`
 // Sankalp — the primary campaign (content only; the transaction is M6).
 export const SANKALP_QUERY = groq`
   *[_type == "sankalpCampaign" && defined(slug.current)] | order(_createdAt asc)[0]{
-    _id, title, "slug": slug.current, intention, story,
+    _id, title, "slug": slug.current, journeyStage, intention, story,
     tiers[]{ amount, label, sustains, recurring },
     goalAmountINR,
     image{ ${IMAGE} },
-    targetPlace->{ title, "slug": slug.current },
+    targetPlace->{ title, "slug": slug.current, "km": riverPosition.km, journeyStage },
     seo
   }
 `;
