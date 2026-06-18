@@ -31,3 +31,6 @@ npm-debug.log*
 
 # research / reference — contains a copyrighted source book; never publish
 /prototype/
+
+# the proprietary book being sold (cover artwork, PDF) — never publish
+/book/
