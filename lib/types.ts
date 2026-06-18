@@ -173,13 +173,14 @@ export interface SankalpData {
   _id: string;
   title?: LocaleValue;
   slug?: string;
+  journeyStage?: number;
   intention?: LocaleValue;
   story?: LocalePortableText;
   tiers?: SustainTierData[];
   goalAmountINR?: number;
   lampsKept?: number;
   image?: GtImageData;
-  targetPlace?: { title?: LocaleValue; slug?: string };
+  targetPlace?: { title?: LocaleValue; slug?: string; km?: number; journeyStage?: number };
   seo?: PlaceSeo;
 }
 
