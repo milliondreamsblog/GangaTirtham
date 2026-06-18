@@ -12,6 +12,7 @@ export const banarasGharana: FaceEntityData = {
   _id: "art.banaras-gharana",
   _type: "art",
   wing: "art",
+  journeyStage: 5, // Reckoning — art of the still centre
   title: { en: "The Banaras Gharana", hi: "बनारस घराना" },
   slug: "banaras-gharana",
   body: {
@@ -36,6 +37,7 @@ export const thinningReach: FaceEntityData = {
   _id: "env.thinning-reach",
   _type: "environmentalIssue",
   wing: "environment",
+  journeyStage: 7, // the Wound — obituary register is Stage VII only (Karuna Guard)
   register: "obituary",
   title: { en: "A thinning reach", hi: "घटती धारा" },
   slug: "thinning-reach",
@@ -64,6 +66,7 @@ export const gangaDussehra: FaceEntityData = {
   _id: "festival.ganga-dussehra",
   _type: "festival",
   wing: "festivals",
+  journeyStage: 4, // Gathering — the festival of the multitude
   title: { en: "Ganga Dussehra", hi: "गंगा दशहरा" },
   slug: "ganga-dussehra",
   body: {
@@ -84,6 +87,7 @@ export const bhagalpurSilk: FaceEntityData = {
   _id: "craft.bhagalpur-silk",
   _type: "craft",
   wing: "craft",
+  journeyStage: 6, // Working Life — the maker's hand
   title: { en: "Bhagalpur silk", hi: "भागलपुर रेशम" },
   slug: "bhagalpur-silk",
   body: {
