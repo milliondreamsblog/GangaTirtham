@@ -192,6 +192,7 @@ export interface FaceListItem {
   slug?: string;
   summary?: LocaleValue;
   register?: "stewardship" | "obituary";
+  journeyStage?: number;
   heroImage?: GtImageData;
   km?: number;
 }
