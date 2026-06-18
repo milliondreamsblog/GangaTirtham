@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { toRoman } from "@/components/journey/roman";
+import { stageA11yLabel } from "@/components/journey/stageA11y";
 import { PortableText } from "@/components/portable/PortableText";
 import { LampField } from "@/components/sankalp/LampField";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getSankalp } from "@/lib/data/sankalp";
 import { isLocale, resolveLocale, type Locale } from "@/lib/i18n";
+import { getJourneyStage, resolveStage } from "@/lib/journey";
 import { sankalpJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/metadata";
 
@@ -71,6 +74,13 @@ export default async function SankalpPage({ params }: { params: Promise<{ locale
   const intention = resolveLocale(sankalp?.intention, typed) || c.register;
   const tiers = sankalp?.tiers ?? [];
   const story = sankalp?.story?.[typed] ?? sankalp?.story?.en;
+  // Which part of her life this lamp keeps — campaign stage, else inherited from
+  // the target place (the schema's intended behaviour). Reuses resolveStage.
+  const stageInput = sankalp?.journeyStage ?? sankalp?.targetPlace?.journeyStage;
+  const stageKm = sankalp?.targetPlace?.km;
+  const stageN =
+    stageInput != null || stageKm != null ? resolveStage(stageInput, stageKm) : null;
+  const stage = stageN != null ? getJourneyStage(stageN) : undefined;
 
   return (
     <main>
@@ -95,6 +105,18 @@ export default async function SankalpPage({ params }: { params: Promise<{ locale
           <p className="t-lede mx-auto mt-7 max-w-[48ch]" style={{ color: "#cfc7ba" }}>
             {intention}
           </p>
+
+          {/* the quietest journey manifestation — which part of her life this lamp keeps.
+              Monochrome, on-dark-muted (never lamp gold); the lamp stays primary. */}
+          {stage && stageN != null && (
+            <p
+              className="label-row mt-5"
+              style={{ textTransform: "none", color: "var(--color-on-dark-muted)" }}
+            >
+              <span aria-hidden="true">{toRoman(stageN)} · {stage.copy[typed].title}</span>
+              <span className="sr-only">{stageA11yLabel(stageN, typed)}</span>
+            </p>
+          )}
 
           <LampField
             initialCount={sankalp?.lampsKept ?? 0}
