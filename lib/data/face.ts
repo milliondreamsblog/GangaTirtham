@@ -14,6 +14,7 @@ const toListItem = (e: FaceEntityData): FaceListItem => ({
   slug: e.slug,
   summary: e.summary,
   register: e.register,
+  journeyStage: e.journeyStage, // carry explicit stage so the obituary stays Stage VII
   heroImage: e.heroImage,
   km: e.km,
 });
