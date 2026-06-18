@@ -1,0 +1,33 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# sanity
+/dist
+/.sanity
+
+# env
+.env
+.env.local
+.env*.local
+
+# logs / os / editor
+*.log
+npm-debug.log*
+.DS_Store
+*.tsbuildinfo
+
+# vercel
+.vercel
+
+# research / reference — contains a copyrighted source book; never publish
+/prototype/
