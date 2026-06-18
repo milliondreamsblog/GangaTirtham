@@ -3,10 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PageHeader } from "@/components/chrome/PageHeader";
+import { toRoman } from "@/components/journey/roman";
+import { stageA11yLabel } from "@/components/journey/stageA11y";
 import { PlateImage } from "@/components/media/PlateImage";
 import { getFaceEntities } from "@/lib/data/face";
 import { WING_FRAMING, WING_LABELS, WINGS } from "@/lib/face";
 import { isLocale, resolveLocale, type Locale } from "@/lib/i18n";
+import { getJourneyStage, resolveStage } from "@/lib/journey";
 import { buildMetadata } from "@/lib/metadata";
 import type { FaceWing } from "@/lib/types";
 
@@ -52,7 +55,15 @@ export default async function FaceHubPage({ params }: { params: Promise<{ locale
 
       <div className="mx-auto max-w-[1320px] px-6 pt-10 pb-24 md:px-12 lg:px-24">
         {WINGS.map((wing: FaceWing) => {
-          const items = entities.filter((e) => e.wing === wing);
+          // Wing stays the primary grouping; within it, order source→ocean by the
+          // river's life stage (then km) so the wing reads as a run of stages.
+          const items = entities
+            .filter((e) => e.wing === wing)
+            .sort(
+              (a, b) =>
+                resolveStage(a.journeyStage, a.km) - resolveStage(b.journeyStage, b.km) ||
+                (a.km ?? 0) - (b.km ?? 0),
+            );
           return (
             <section key={wing} className="mt-16 border-t border-stone pt-10 first:mt-8 first:border-t-0">
               <div className="max-w-[60ch]">
@@ -62,7 +73,10 @@ export default async function FaceHubPage({ params }: { params: Promise<{ locale
 
               {items.length > 0 ? (
                 <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8">
-                  {items.map((item) => (
+                  {items.map((item) => {
+                    const stageN = resolveStage(item.journeyStage, item.km);
+                    const stage = getJourneyStage(stageN);
+                    return (
                     <Link key={item.slug} href={`/${typed}/face-ganga/${wing}/${item.slug}`} className="tile group block">
                       <PlateImage
                         image={item.heroImage}
@@ -72,6 +86,13 @@ export default async function FaceHubPage({ params }: { params: Promise<{ locale
                         sizes="(max-width: 905px) 50vw, 22vw"
                       />
                       <div className="mt-4">
+                        {/* stage eyebrow — monochrome, secondary to the wing; shared journey vocab */}
+                        {stage && (
+                          <p className="label-row mb-1" style={{ textTransform: "none" }}>
+                            <span aria-hidden="true">{toRoman(stageN)} · {stage.copy[typed].title}</span>
+                            <span className="sr-only">{stageA11yLabel(stageN, typed)}</span>
+                          </p>
+                        )}
                         <p className="font-display text-lg text-ink">
                           {item.title?.hi && (
                             <span lang="hi" className="font-deva mr-2">
@@ -86,7 +107,8 @@ export default async function FaceHubPage({ params }: { params: Promise<{ locale
                         </p>
                       </div>
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="t-body mt-6 italic text-slate-light">
